@@ -3,49 +3,132 @@ package org.alesbe;
 import java.util.Scanner;
 
 public class CoffeeMachine {
-    private static int checkAvailableCups(int water, int milk, int coffeeBeans) {
-        final int WATER_PER_CUP = 200;
-        final int MILK_PER_CUP = 50;
-        final int COFFEE_PER_CUP = 15;
+    // Coffee types constants
+    final int ESPRESSO_WATER = 250;
+    final int ESPRESSO_COFFEE = 16;
+    final int ESPRESSO_PRICE = 4;
 
-        int availableCupsWithWater = water / WATER_PER_CUP;
-        int availableCupsWithMilk = milk / MILK_PER_CUP;
-        int availableCupsWithCoffee = coffeeBeans / COFFEE_PER_CUP;
+    final int LATTE_WATER = 350;
+    final int LATTE_MILK = 75;
+    final int LATTE_COFFEE = 20;
+    final int LATTE_PRICE = 7;
 
-        // Return the number of cups that the machine could do with that amount of ingredients
-        return Math.min(Math.min(availableCupsWithWater, availableCupsWithMilk), availableCupsWithCoffee);
+    final int CAPPUCCINO_WATER = 200;
+    final int CAPPUCCINO_MILK = 100;
+    final int CAPPUCCINO_COFFEE = 12;
+    final int CAPPUCCINO_PRICE = 6;
+
+    // Available resources
+    int availableWater = 400;
+    int availableMilk = 540;
+    int availableCoffee = 120;
+    int availableCups = 9;
+    int availableMoney = 550;
+
+    // Actions
+    private void buy() {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
+        option = scanner.nextInt();
+
+        switch (option) {
+            case 1:
+                this.availableWater -= ESPRESSO_WATER;
+                this.availableCoffee -= ESPRESSO_COFFEE;
+                this.availableMoney += ESPRESSO_PRICE;
+                this.availableCups--;
+                break;
+
+            case 2:
+                this.availableWater -= LATTE_WATER;
+                this.availableMilk -= LATTE_MILK;
+                this.availableCoffee -= LATTE_COFFEE;
+                this.availableMoney += LATTE_PRICE;
+                this.availableCups--;
+                break;
+
+            case 3:
+                this.availableWater -= CAPPUCCINO_WATER;
+                this.availableMilk -= CAPPUCCINO_MILK;
+                this.availableCoffee -= CAPPUCCINO_COFFEE;
+                this.availableMoney += CAPPUCCINO_PRICE;
+                this.availableCups--;
+                break;
+
+            default:
+                System.out.println("Please, enter a valid option.");
+                break;
+        }
+    }
+
+    private void fill() {
+        Scanner scanner = new Scanner(System.in);
+
+        int auxOption;
+        System.out.println("Write how many ml of water you want to add:");
+        auxOption = scanner.nextInt();
+        this.availableWater += auxOption;
+
+        System.out.println("Write how many ml of milk you want to add:");
+        auxOption = scanner.nextInt();
+        this.availableMilk += auxOption;
+
+        System.out.println("Write how many grams of coffee beans you want to add:");
+        auxOption = scanner.nextInt();
+        this.availableCoffee += auxOption;
+
+        System.out.println("Write how many disposable cups you want to add:");
+        auxOption = scanner.nextInt();
+        this.availableCups += auxOption;
+    }
+
+    private void take() {
+        System.out.println("I gave you $" + this.availableMoney);
+        System.out.println();
+        this.availableMoney = 0;
+    }
+
+    private void displayInfo() {
+        System.out.println("The coffee machine has:");
+        System.out.println(this.availableWater + " ml of water");
+        System.out.println(this.availableMilk + " ml of milk");
+        System.out.println(this.availableCoffee + " g of coffee beans");
+        System.out.println(this.availableCups + " disposable cups");
+        System.out.println("$" + this.availableMoney + " of money");
+        System.out.println();
     }
 
     public static void main(String[] args) {
+        CoffeeMachine coffeeMachine = new CoffeeMachine();
         Scanner scanner = new Scanner(System.in);
 
-        int water;
-        int milk;
-        int coffeeBeans;
-        int cupsOfCoffee;
+        String action;
 
-        int availableCupsOfCoffee;
+        coffeeMachine.displayInfo();
 
-        System.out.println("Write how many ml of water the coffee machine has:");
-        water = scanner.nextInt();
-        System.out.println("Write how many ml of milk the coffee machine has:");
-        milk = scanner.nextInt();
-        System.out.println("Write how many grams of coffee beans the coffee machine has:");
-        coffeeBeans = scanner.nextInt();
-        System.out.println("Write how many cups of coffee you will need:");
-        cupsOfCoffee = scanner.nextInt();
+        System.out.println("Write action (buy, fill, take):");
+        action = scanner.next();
 
-        availableCupsOfCoffee = checkAvailableCups(water, milk, coffeeBeans);
+        switch (action) {
+            case "buy":
+                coffeeMachine.buy();
+                break;
 
-        if(cupsOfCoffee < availableCupsOfCoffee) {
-            System.out.println("Yes, I can make that amount of coffee (and even " + (availableCupsOfCoffee-cupsOfCoffee) + " more than that)");
+            case "fill":
+                coffeeMachine.fill();
+                break;
 
-        } else if (cupsOfCoffee == availableCupsOfCoffee) {
-            System.out.println("Yes, I can make that amount of coffee ");
+            case "take":
+                coffeeMachine.take();
+                break;
 
-        } else {
-            System.out.println("No, I can make only " + availableCupsOfCoffee + " cup(s) of coffee");
-
+            default:
+                System.out.println("Enter a valid option!");
+                break;
         }
+
+        coffeeMachine.displayInfo();
     }
 }
