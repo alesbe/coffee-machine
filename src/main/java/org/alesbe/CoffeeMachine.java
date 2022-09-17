@@ -28,20 +28,42 @@ public class CoffeeMachine {
     // Actions
     private void buy() {
         Scanner scanner = new Scanner(System.in);
-        int option;
+        String option;
 
-        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
-        option = scanner.nextInt();
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu: ");
+        option = scanner.next();
 
         switch (option) {
-            case 1:
+            case "1":
+                if(availableWater < ESPRESSO_WATER) {
+                    System.out.println("Sorry, not enough water!");
+                    return;
+                }
+                if(availableCoffee < ESPRESSO_COFFEE) {
+                    System.out.println("Sorry, not enough coffee!");
+                    return;
+                }
+
                 this.availableWater -= ESPRESSO_WATER;
                 this.availableCoffee -= ESPRESSO_COFFEE;
                 this.availableMoney += ESPRESSO_PRICE;
                 this.availableCups--;
                 break;
 
-            case 2:
+            case "2":
+                if(availableWater < LATTE_WATER) {
+                    System.out.println("Sorry, not enough water!");
+                    return;
+                }
+                if(availableMilk < LATTE_MILK) {
+                    System.out.println("Sorry, not enough milk!");
+                    return;
+                }
+                if(availableCoffee < LATTE_COFFEE) {
+                    System.out.println("Sorry, not enough coffee!");
+                    return;
+                }
+
                 this.availableWater -= LATTE_WATER;
                 this.availableMilk -= LATTE_MILK;
                 this.availableCoffee -= LATTE_COFFEE;
@@ -49,12 +71,28 @@ public class CoffeeMachine {
                 this.availableCups--;
                 break;
 
-            case 3:
+            case "3":
+                if(availableWater < CAPPUCCINO_WATER) {
+                    System.out.println("Sorry, not enough water!");
+                    return;
+                }
+                if(availableMilk < CAPPUCCINO_MILK) {
+                    System.out.println("Sorry, not enough milk!");
+                    return;
+                }
+                if(availableCoffee < CAPPUCCINO_COFFEE) {
+                    System.out.println("Sorry, not enough coffee!");
+                    return;
+                }
+
                 this.availableWater -= CAPPUCCINO_WATER;
                 this.availableMilk -= CAPPUCCINO_MILK;
                 this.availableCoffee -= CAPPUCCINO_COFFEE;
                 this.availableMoney += CAPPUCCINO_PRICE;
                 this.availableCups--;
+                break;
+
+            case "back":
                 break;
 
             default:
@@ -106,29 +144,34 @@ public class CoffeeMachine {
 
         String action;
 
-        coffeeMachine.displayInfo();
+        mainLoop: while(true) {
+            System.out.println("Write action (buy, fill, take, remaining, exit): ");
+            action = scanner.next();
 
-        System.out.println("Write action (buy, fill, take):");
-        action = scanner.next();
+            switch (action) {
+                case "buy":
+                    coffeeMachine.buy();
+                    break;
 
-        switch (action) {
-            case "buy":
-                coffeeMachine.buy();
-                break;
+                case "fill":
+                    coffeeMachine.fill();
+                    break;
 
-            case "fill":
-                coffeeMachine.fill();
-                break;
+                case "take":
+                    coffeeMachine.take();
+                    break;
 
-            case "take":
-                coffeeMachine.take();
-                break;
+                case "remaining":
+                    coffeeMachine.displayInfo();
+                    break;
 
-            default:
-                System.out.println("Enter a valid option!");
-                break;
+                case "exit":
+                    break mainLoop;
+
+                default:
+                    System.out.println("Enter a valid option!");
+                    break;
+            }
         }
-
-        coffeeMachine.displayInfo();
     }
 }
